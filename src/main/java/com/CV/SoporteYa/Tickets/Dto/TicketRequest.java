@@ -1,5 +1,6 @@
 package com.CV.SoporteYa.Tickets.Dto;
 
+import com.CV.SoporteYa.Tickets.Enums.TicketPrioridad;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -16,12 +17,6 @@ public class TicketRequest {
     @NotBlank(message = "Descripcion cant be blank")
     private String descripcion;
 
-    @NotBlank(message = "prioridad cant be blank")
-    private String prioridad;
-
-    @NotBlank(message = "prioridad cant be blank")
-    private String estado;
-
-    @NotNull
-    private LocalDate fechaCreacion;
+    @NotNull(message = "prioridad cant be blank")
+    private TicketPrioridad prioridad;
 }

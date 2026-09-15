@@ -1,10 +1,11 @@
 package com.CV.SoporteYa.Tickets.Dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import com.CV.SoporteYa.Tickets.Enums.TicketEstado;
+import com.CV.SoporteYa.Tickets.Enums.TicketPrioridad;
+import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -14,9 +15,9 @@ public class TicketResponse {
     private Long id;
     private String titulo;
     private String descripcion;
-    private String prioridad;
+    private TicketPrioridad prioridad;
     //ALTA - MEDIA - BAJA
-    private String estado;
+    private TicketEstado estado;
     //ABIERTO - EN_PROGRESO - RESUELTO - CERRADO
-    private LocalDate fechaCreacion;
+    private LocalDateTime fechaCreacion;
 }

@@ -1,13 +1,15 @@
 package com.CV.SoporteYa.Tickets.Entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.CV.SoporteYa.Tickets.Enums.TicketEstado;
+import com.CV.SoporteYa.Tickets.Enums.TicketPrioridad;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "tickets")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -26,13 +28,14 @@ public class Ticket {
     private String descripcion;
 
     @Column(nullable = false)
-    private String prioridad;
+    @Enumerated(EnumType.STRING)
+    private TicketPrioridad prioridad;
     //ALTA - MEDIA - BAJA
 
-    @Column(nullable = false)
-    private String estado;
+    @Enumerated(EnumType.STRING)
+    private TicketEstado estado;
     //ABIERTO - EN_PROGRESO - RESUELTO - CERRADO
 
     @Column(nullable = false)
-    private LocalDate fechaCreacion;
+    private LocalDateTime fechaCreacion;
 }

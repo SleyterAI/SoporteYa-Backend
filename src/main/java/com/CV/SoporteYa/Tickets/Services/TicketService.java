@@ -4,54 +4,65 @@ import com.CV.SoporteYa.Tickets.Dto.TicketMessageResponse;
 import com.CV.SoporteYa.Tickets.Dto.TicketRequest;
 import com.CV.SoporteYa.Tickets.Dto.TicketResponse;
 import com.CV.SoporteYa.Tickets.Entity.Ticket;
+import com.CV.SoporteYa.Tickets.Enums.TicketEstado;
+import com.CV.SoporteYa.Tickets.Enums.TicketPrioridad;
+import com.CV.SoporteYa.Tickets.Mapper.ResponseMapper;
 import com.CV.SoporteYa.Tickets.Repository.TicketRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+
+import static java.lang.String.valueOf;
 
 @Service
 @RequiredArgsConstructor
-public class TicketService implements ITicketService{
+@Transactional
+public class TicketService implements ITicketService {
 
     private final TicketRepository ticketRepository;
+    private final ResponseMapper responseMapper;
 
     @Override
-    public TicketMessageResponse createTicket(TicketRequest ticketRequest) {
-        Ticket ticket = Ticket.builder()
-                .titulo(ticketRequest.getTitulo())
-                .descripcion(ticketRequest.getDescripcion())
-                .prioridad(ticketRequest.getPrioridad())
-                .estado("ABIERTO")
-                .fechaCreacion(LocalDate.now())
-                .build();
-        ticketRepository.save(ticket);
-        return TicketMessageResponse.builder()
-                .mensaje("Ticket Creado")
-                .build();
+    public TicketResponse createTicket(TicketRequest ticketRequest) {
+        try {
+            Ticket ticket = Ticket.builder()
+                    .titulo(ticketRequest.getTitulo())
+                    .descripcion(ticketRequest.getDescripcion())
+                    .prioridad(ticketRequest.getPrioridad())
+                    .estado(TicketEstado.ABIERTO)
+                    .fechaCreacion(LocalDateTime.now())
+                    .build();
+            Ticket ticket2 = ticketRepository.save(ticket);
+
+            return responseMapper.toResponse(ticket2);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     @Override
     public List<TicketResponse> getAllTicket() {
         List<Ticket> tickets = ticketRepository.findAll();
         return tickets.stream()
-                .map(
-                ticket -> TicketResponse.builder()
-                        .id(ticket.getId())
-                        .titulo(ticket.getTitulo())
-                        .descripcion(ticket.getDescripcion())
-                        .prioridad(ticket.getPrioridad())
-                        .estado(ticket.getEstado())
-                        .fechaCreacion(ticket.getFechaCreacion())
-                        .build()
+                .map(ticket -> TicketResponse.builder()
+                                .id(ticket.getId())
+                                .titulo(ticket.getTitulo())
+                                .descripcion(ticket.getDescripcion())
+                                .prioridad(ticket.getPrioridad())
+                                .estado(ticket.getEstado())
+                                .fechaCreacion(ticket.getFechaCreacion())
+                                .build()
                 )
                 .toList();
     }
 
     @Override
-    public List<TicketResponse> getTicketsByEstadoNRPrioridad(String estado, String prioridad) {
+    public List<TicketResponse> getTicketsByEstadoNRPrioridad(TicketEstado estado, TicketPrioridad prioridad) {
         if (estado != null && prioridad != null) {
             return ticketRepository.findByEstadoAndPrioridad(estado, prioridad);
         } else if (estado != null) {
@@ -76,7 +87,7 @@ public class TicketService implements ITicketService{
     @Override
     public TicketResponse getTicketById(Long id) {
         Ticket ticket = ticketRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("El ticket no existe"));
+                .orElseThrow(() -> new RuntimeException("El ticket no existe"));
         return TicketResponse.builder()
                 .id(ticket.getId())
                 .titulo(ticket.getTitulo())
@@ -88,20 +99,17 @@ public class TicketService implements ITicketService{
     }
 
     @Override
-    public TicketMessageResponse updateTicketByStatus(Long id, TicketRequest ticketRequest) {
-        Ticket updateTicket = ticketRepository.findById(id)
+    public Ticket updateTicketByStatus(Long id, TicketEstado newEstado) {
+        Ticket ticket = ticketRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("El ticket no existe"));
 
-        updateTicket.setTitulo(ticketRequest.getTitulo());
-        updateTicket.setDescripcion(ticketRequest.getDescripcion());
-        updateTicket.setPrioridad(ticketRequest.getPrioridad());
-        updateTicket.setEstado(ticketRequest.getEstado());
-        updateTicket.setFechaCreacion(ticketRequest.getFechaCreacion());
-        ticketRepository.save(updateTicket);
-
-        return TicketMessageResponse.builder()
-                .mensaje("Ticket actualizado")
-                .build();
+        if (!ticket.getEstado().validateWorkflow(newEstado)) {
+            throw new RuntimeException(
+                    "No se puede cambiar de " + ticket.getEstado() + " a " + newEstado
+            );
+        }
+        ticket.setEstado(newEstado);
+        return ticketRepository.save(ticket);
     }
 
     @Override
