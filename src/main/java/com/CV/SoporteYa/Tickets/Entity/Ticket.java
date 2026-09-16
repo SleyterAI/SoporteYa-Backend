@@ -2,6 +2,7 @@ package com.CV.SoporteYa.Tickets.Entity;
 
 import com.CV.SoporteYa.Tickets.Enums.TicketEstado;
 import com.CV.SoporteYa.Tickets.Enums.TicketPrioridad;
+import com.CV.SoporteYa.User.Entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -38,4 +39,8 @@ public class Ticket {
 
     @Column(nullable = false)
     private LocalDateTime fechaCreacion;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 }

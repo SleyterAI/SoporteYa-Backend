@@ -20,4 +20,6 @@ public class TicketResponse {
     private TicketEstado estado;
     //ABIERTO - EN_PROGRESO - RESUELTO - CERRADO
     private LocalDateTime fechaCreacion;
+
+    private String user_fullname;
 }

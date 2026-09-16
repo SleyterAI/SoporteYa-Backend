@@ -1,8 +1,12 @@
 package com.CV.SoporteYa.User.Entity;
 
+import com.CV.SoporteYa.Tickets.Entity.Ticket;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -14,7 +18,7 @@ public class User {
     private Long id;
 
     @Column(unique = true,length = 30, nullable = false)
-    private String username;
+    private String fullname;
 
     @Column(unique = true,length = 50, nullable = false)
     private String email;
@@ -26,4 +30,6 @@ public class User {
     private String role;
     //"ADMIN", "USER"
 
+    @OneToMany(mappedBy = "user")
+    private List<Ticket> tickets = new ArrayList<>();
 }

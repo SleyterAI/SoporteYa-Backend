@@ -56,6 +56,7 @@ public class TicketService implements ITicketService {
                                 .prioridad(ticket.getPrioridad())
                                 .estado(ticket.getEstado())
                                 .fechaCreacion(ticket.getFechaCreacion())
+                                .user_fullname(ticket.getUser().getFullname())
                                 .build()
                 )
                 .toList();
@@ -79,6 +80,7 @@ public class TicketService implements ITicketService {
                         .prioridad(ticket.getPrioridad())
                         .estado(ticket.getEstado())
                         .fechaCreacion(ticket.getFechaCreacion())
+                        .user_fullname(ticket.getUser().getFullname())
                         .build()
                 )
                 .toList();
@@ -95,6 +97,7 @@ public class TicketService implements ITicketService {
                 .prioridad(ticket.getPrioridad())
                 .estado(ticket.getEstado())
                 .fechaCreacion(ticket.getFechaCreacion())
+                .user_fullname(ticket.getUser().getFullname())
                 .build();
     }
 
