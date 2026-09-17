@@ -41,6 +41,10 @@ public class Ticket {
     private LocalDateTime fechaCreacion;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "categoria_id", nullable = false)
+    private Categoria categoria;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 }

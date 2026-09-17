@@ -4,7 +4,6 @@ import com.CV.SoporteYa.Tickets.Enums.TicketEstado;
 import com.CV.SoporteYa.Tickets.Enums.TicketPrioridad;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -19,6 +18,7 @@ public class TicketResponse {
     //ALTA - MEDIA - BAJA
     private TicketEstado estado;
     //ABIERTO - EN_PROGRESO - RESUELTO - CERRADO
+    private String categoria_name;
     private LocalDateTime fechaCreacion;
 
     private String user_fullname;

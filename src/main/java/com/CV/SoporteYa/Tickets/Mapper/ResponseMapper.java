@@ -16,7 +16,9 @@ public class ResponseMapper {
                 .descripcion(ticket.getDescripcion())
                 .prioridad(ticket.getPrioridad())
                 .estado(ticket.getEstado())
+                .categoria_name(ticket.getCategoria().getName())
                 .fechaCreacion(ticket.getFechaCreacion())
+                .user_fullname(ticket.getUser().getFullname())
                 .build();
     }
 }

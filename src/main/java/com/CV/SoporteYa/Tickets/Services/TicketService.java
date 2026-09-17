@@ -8,16 +8,13 @@ import com.CV.SoporteYa.Tickets.Enums.TicketEstado;
 import com.CV.SoporteYa.Tickets.Enums.TicketPrioridad;
 import com.CV.SoporteYa.Tickets.Mapper.ResponseMapper;
 import com.CV.SoporteYa.Tickets.Repository.TicketRepository;
+import com.CV.SoporteYa.Tickets.Services.Interface.ITicketService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-
-import static java.lang.String.valueOf;
 
 @Service
 @RequiredArgsConstructor
@@ -29,20 +26,18 @@ public class TicketService implements ITicketService {
 
     @Override
     public TicketResponse createTicket(TicketRequest ticketRequest) {
-        try {
             Ticket ticket = Ticket.builder()
                     .titulo(ticketRequest.getTitulo())
                     .descripcion(ticketRequest.getDescripcion())
                     .prioridad(ticketRequest.getPrioridad())
+                    .categoria(ticketRequest.getCategoria())
                     .estado(TicketEstado.ABIERTO)
                     .fechaCreacion(LocalDateTime.now())
+                    .user(ticketRequest.getUser())
                     .build();
             Ticket ticket2 = ticketRepository.save(ticket);
 
             return responseMapper.toResponse(ticket2);
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
     }
 
     @Override
@@ -50,14 +45,15 @@ public class TicketService implements ITicketService {
         List<Ticket> tickets = ticketRepository.findAll();
         return tickets.stream()
                 .map(ticket -> TicketResponse.builder()
-                                .id(ticket.getId())
-                                .titulo(ticket.getTitulo())
-                                .descripcion(ticket.getDescripcion())
-                                .prioridad(ticket.getPrioridad())
-                                .estado(ticket.getEstado())
-                                .fechaCreacion(ticket.getFechaCreacion())
-                                .user_fullname(ticket.getUser().getFullname())
-                                .build()
+                        .id(ticket.getId())
+                        .titulo(ticket.getTitulo())
+                        .descripcion(ticket.getDescripcion())
+                        .prioridad(ticket.getPrioridad())
+                        .estado(ticket.getEstado())
+                        .categoria_name(ticket.getCategoria().getName())
+                        .fechaCreacion(ticket.getFechaCreacion())
+                        .user_fullname(ticket.getUser().getFullname())
+                        .build()
                 )
                 .toList();
     }
@@ -71,19 +67,8 @@ public class TicketService implements ITicketService {
         } else if (prioridad != null) {
             return ticketRepository.findByPrioridad(prioridad);
         }
-        List<Ticket> tickets = ticketRepository.findAll();
-        return tickets.stream()
-                .map(ticket -> TicketResponse.builder()
-                        .id(ticket.getId())
-                        .titulo(ticket.getTitulo())
-                        .descripcion(ticket.getDescripcion())
-                        .prioridad(ticket.getPrioridad())
-                        .estado(ticket.getEstado())
-                        .fechaCreacion(ticket.getFechaCreacion())
-                        .user_fullname(ticket.getUser().getFullname())
-                        .build()
-                )
-                .toList();
+
+        return getAllTicket();
     }
 
     @Override
@@ -96,6 +81,7 @@ public class TicketService implements ITicketService {
                 .descripcion(ticket.getDescripcion())
                 .prioridad(ticket.getPrioridad())
                 .estado(ticket.getEstado())
+                .categoria_name(ticket.getCategoria().getName())
                 .fechaCreacion(ticket.getFechaCreacion())
                 .user_fullname(ticket.getUser().getFullname())
                 .build();

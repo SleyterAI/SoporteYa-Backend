@@ -1,4 +1,4 @@
-package com.CV.SoporteYa.Tickets.Services;
+package com.CV.SoporteYa.Tickets.Services.Interface;
 
 import com.CV.SoporteYa.Tickets.Dto.TicketMessageResponse;
 import com.CV.SoporteYa.Tickets.Dto.TicketRequest;
