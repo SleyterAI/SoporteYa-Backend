@@ -17,8 +17,8 @@ public class TicketRequest {
     @NotBlank(message = "Descripcion cant be blank")
     private String descripcion;
 
-    @NotNull(message = "prioridad cant be blank")
-    private TicketPrioridad prioridad;
+    /*@NotNull(message = "prioridad cant be blank")
+    private TicketPrioridad prioridad;*/
 
     @NotNull(message = "categoria cant be blank")
     private Categoria categoria;

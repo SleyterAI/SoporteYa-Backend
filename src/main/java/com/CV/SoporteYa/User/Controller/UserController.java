@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,5 +47,10 @@ public class UserController {
     /*@PreAuthorize("hasRole('ADMIN')")*/
     public ResponseEntity<MessageResponse> deleteUser(@PathVariable Long id) {
         return ResponseEntity.ok(userService.deleteUser(id));
+    }
+
+    @GetMapping("/id")
+    public ResponseEntity<Long> getUserIdByEmail(Authentication authentication){
+        return ResponseEntity.ok(userService.getUserIdByEmail(authentication.getName()));
     }
 }

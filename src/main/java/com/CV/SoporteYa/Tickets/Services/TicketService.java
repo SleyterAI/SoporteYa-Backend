@@ -29,7 +29,7 @@ public class TicketService implements ITicketService {
             Ticket ticket = Ticket.builder()
                     .titulo(ticketRequest.getTitulo())
                     .descripcion(ticketRequest.getDescripcion())
-                    .prioridad(ticketRequest.getPrioridad())
+                    .prioridad(TicketPrioridad.PENDIENTE)
                     .categoria(ticketRequest.getCategoria())
                     .estado(TicketEstado.ABIERTO)
                     .fechaCreacion(LocalDateTime.now())

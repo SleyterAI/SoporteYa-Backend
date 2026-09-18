@@ -84,4 +84,11 @@ public class UserService implements IUserService {
         User promotedUser = userRepository.save(user);
         return new RolNMessageResponse("User promoted correctly: ", promotedUser.getRole());
     }
+
+    public Long getUserIdByEmail(String email){
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"))
+                .getId();
+
+    }
 }
