@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,6 +41,12 @@ public class TicketController {
     @GetMapping("/{id}")
     public ResponseEntity<TicketResponse> getTicketById(@PathVariable Long id) {
         return ResponseEntity.ok(ticketService.getTicketById(id));
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<List<TicketResponse>> getTicketByUserEmail(Authentication authentication) {
+        String email = authentication.getName();
+        return ResponseEntity.ok(ticketService.getTicketByUserEmail(email));
     }
 
     @PatchMapping("/{id}/estado")

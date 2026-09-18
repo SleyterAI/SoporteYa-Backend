@@ -105,4 +105,22 @@ public class TicketService implements ITicketService {
     public TicketMessageResponse deleteTicket(Ticket ticket) {
         return null;
     }
+
+    public List<TicketResponse> getTicketByUserEmail(String email){
+        List<Ticket> tickets = ticketRepository.findByUserEmail(email);
+        return tickets.stream()
+                .map(ticket -> TicketResponse.builder()
+                        .id(ticket.getId())
+                        .titulo(ticket.getTitulo())
+                        .descripcion(ticket.getDescripcion())
+                        .prioridad(ticket.getPrioridad())
+                        .estado(ticket.getEstado())
+                        .categoria_name(ticket.getCategoria().getName())
+                        .fechaCreacion(ticket.getFechaCreacion())
+                        .user_fullname(ticket.getUser().getFullname())
+                        .build()
+                )
+                .toList();
+
+    }
 }
