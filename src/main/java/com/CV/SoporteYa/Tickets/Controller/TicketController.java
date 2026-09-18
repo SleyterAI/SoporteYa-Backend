@@ -54,4 +54,10 @@ public class TicketController {
         Ticket ticket = ticketService.updateTicketByStatus(id, newStatus.getEstado());
         return ResponseEntity.ok("Product Id: "+ticket.getId()+", visible now is: "+ticket.getEstado());
     }
+
+    @PatchMapping("/{id}/prioridad")
+    public ResponseEntity<String> updateTicketPrioridad(@PathVariable Long id, @RequestBody Ticket prio) {
+        Ticket ticket = ticketService.updateTicketPrioridad(id, prio.getPrioridad());
+        return ResponseEntity.ok("Product Id: "+ticket.getId()+", prioridad now is: "+ticket.getPrioridad());
+    }
 }

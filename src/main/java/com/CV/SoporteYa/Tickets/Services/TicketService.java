@@ -101,6 +101,13 @@ public class TicketService implements ITicketService {
         return ticketRepository.save(ticket);
     }
 
+    public Ticket updateTicketPrioridad(Long id, TicketPrioridad prioridad){
+        Ticket ticket = ticketRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("El ticket no existe"));
+        ticket.setPrioridad(prioridad);
+        return ticketRepository.save(ticket);
+    }
+
     @Override
     public TicketMessageResponse deleteTicket(Ticket ticket) {
         return null;
