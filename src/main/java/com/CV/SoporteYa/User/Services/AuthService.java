@@ -28,15 +28,6 @@ public class AuthService implements IAuthService {
                         loginRequestDto.getPassword()
                 ));
         String token = jwtService.generarToken(authentication);
-        UserDetails userDetails =
-                (UserDetails) authentication.getPrincipal();
-
-        String roleUser = userDetails.getAuthorities()
-                .stream()
-                .map(GrantedAuthority::getAuthority)
-                .findFirst()
-                .orElse(null);
-
-        return new LoginResponse(token,userDetails.getUsername(), roleUser);
+        return new LoginResponse(token);
     }
 }
