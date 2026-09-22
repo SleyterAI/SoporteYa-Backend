@@ -6,11 +6,14 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 @Service
@@ -30,6 +33,10 @@ public class JwtService {
     // Extraccion del expiration, usa el metodo generico
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
+    }
+
+    public String extractRole(String token) {
+        return extractClaim(token, claims -> claims.get("role", String.class));
     }
 
     /* Metodo generico para obtener partes del jwt, reutilizable */
@@ -54,10 +61,21 @@ public class JwtService {
 
     //Token -> email
     public String generarToken(Authentication authentication) {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
+        String role = userDetails.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .findFirst()
+                .orElse("ROLE_USER");
+
+        Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("role", role);
         return Jwts
                 .builder()
+                .claims(extraClaims)
                 .subject(authentication.getName())
-                .issuedAt(new Date())
+                .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + jwtExpiration))
                 .signWith(getSignInKey())
                 .compact();
